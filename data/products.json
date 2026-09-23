@@ -1,0 +1,32 @@
+[
+  {
+    "id": "demo-1",
+    "name": "Lilac Bloom Bouquet",
+    "slug": "lilac-bloom-bouquet",
+    "category": "Bouquets",
+    "description": "Soft lilac bouquet for special gifting moments.",
+    "originalPrice": 1499,
+    "discountPrice": 999,
+    "images": [
+      "/uploads/demo-bouquet-1.svg"
+    ],
+    "video": "",
+    "featured": true,
+    "active": true
+  },
+  {
+    "id": "demo-2",
+    "name": "Cute Couple Keychains",
+    "slug": "cute-couple-keychains",
+    "category": "Keychains",
+    "description": "Minimal handmade keychains with a cute theme.",
+    "originalPrice": 799,
+    "discountPrice": 499,
+    "images": [
+      "/uploads/demo-keychain-1.svg"
+    ],
+    "video": "",
+    "featured": false,
+    "active": true
+  }
+]

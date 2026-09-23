@@ -59,11 +59,28 @@ const itemInfo = {
   "IMG-20260922-WA0142.jpg":["Yellow Flower Delivery","bouquet"]
 };
 
+const priceMap = {
+  bouquet: [1499, 999],
+  custom: [1299, 799],
+  keychain: [799, 499],
+  surprise: [999, 599]
+};
+
+const buildWhatsAppText = (items) => {
+  const lines = items.map((item) => `- ${item.title} x ${item.quantity || 1} — ₹${item.discountPrice}`).join("\n");
+  const total = items.reduce((sum, item) => sum + (item.discountPrice * (item.quantity || 1)), 0);
+  return encodeURIComponent(`Hi DS Lumora, I want to order:\n${lines}\n\nTotal: ₹${total}`);
+};
+
 function App(){
   const [menu,setMenu]=useState(false);
   const [filter,setFilter]=useState("all");
   const [light,setLight]=useState(null);
   const [scrolled,setScrolled]=useState(false);
+  const [isCartOpen,setIsCartOpen]=useState(false);
+  const [cart,setCart]=useState(() => {
+    try { return JSON.parse(localStorage.getItem("dsLumoraCart") || "[]"); } catch { return []; }
+  });
 
   useEffect(()=>{
     const f=()=>setScrolled(window.scrollY>18);
@@ -71,10 +88,43 @@ function App(){
     return()=>window.removeEventListener("scroll",f);
   },[]);
 
+  useEffect(()=>{
+    localStorage.setItem("dsLumoraCart", JSON.stringify(cart));
+  }, [cart]);
+
   const items=useMemo(()=>tags.map((file,i)=>{
     const [title,cat]=itemInfo[file]||["Made With Love","custom"];
-    return {file,title,cat,index:i};
+    const [originalPrice,discountPrice]=priceMap[cat] || [999,599];
+    return {file,title,cat,index:i,originalPrice,discountPrice};
   }).filter(x=>filter==="all"||x.cat===filter),[filter]);
+
+  const addToCart = (item) => {
+    setCart((prev) => {
+      const existing = prev.find((entry) => entry.file === item.file);
+      if (existing) {
+        return prev.map((entry) => entry.file === item.file ? { ...entry, quantity: entry.quantity + 1 } : entry);
+      }
+      return [...prev, { ...item, quantity: 1 }];
+    });
+    setIsCartOpen(true);
+  };
+
+  const removeFromCart = (file) => setCart((prev) => prev.filter((item) => item.file !== file));
+  const subtotal = cart.reduce((sum, item) => sum + (item.discountPrice * item.quantity), 0);
+
+  const buyNow = (item) => {
+    const message = `Hi DS Lumora, I want to buy ${item.title} for ₹${item.discountPrice}.`;
+    const url = `https://wa.me/919569533928?text=${encodeURIComponent(message)}`;
+    window.open(url, "_blank", "noopener,noreferrer");
+  };
+
+  const checkoutCart = () => {
+    if (!cart.length) return;
+    const url = `https://wa.me/919569533928?text=${buildWhatsAppText(cart)}`;
+    window.open(url, "_blank", "noopener,noreferrer");
+    setIsCartOpen(false);
+    setCart([]);
+  };
 
   const openOrder=()=>window.open(WA,"_blank","noopener,noreferrer");
   const scroll=(id)=>{document.getElementById(id)?.scrollIntoView({behavior:"smooth"});setMenu(false)};
@@ -89,10 +139,14 @@ function App(){
         <button onClick={()=>scroll("story")}>Our Story</button>
         <button onClick={()=>scroll("gallery")}>The Little Things</button>
         <button onClick={()=>scroll("how")}>How It Works</button>
+        <a className="nav-admin-link" href="/admin">Admin Login</a>
         <a href={IG} target="_blank" rel="noreferrer"><Instagram size={16}/> Instagram</a>
         <a href={WA} target="_blank" rel="noreferrer"><MessageCircle size={16}/> WhatsApp</a>
       </nav>
-      <button className="hamb" onClick={()=>setMenu(!menu)}>{menu?<X/>:<Menu/>}</button>
+      <div className="nav-actions">
+        <button className="cart-toggle" onClick={()=>setIsCartOpen(!isCartOpen)}><MessageCircle size={16}/> Cart ({cart.reduce((count,item)=>count + item.quantity,0)})</button>
+        <button className="hamb" onClick={()=>setMenu(!menu)}>{menu?<X/>:<Menu/>}</button>
+      </div>
     </header>
 
     <main id="top">
@@ -208,9 +262,22 @@ function App(){
     {light && <div className="lightbox" onClick={()=>setLight(null)}>
       <button className="close" onClick={()=>setLight(null)}><X/></button>
       <button className="prev" onClick={(e)=>{e.stopPropagation();const i=items.findIndex(x=>x.file===light.file);setLight(items[(i-1+items.length)%items.length])}}><ChevronLeft/></button>
-      <div className="light-content" onClick={e=>e.stopPropagation()}><img src={"/media/"+light.file} alt={light.title}/><div><small>{labelFor(light.cat)}</small><h3>{light.title}</h3><a href={IG} target="_blank" rel="noreferrer">Ask about this piece <ArrowUpRight size={16}/></a></div></div>
+      <div className="light-content" onClick={e=>e.stopPropagation()}><img src={"/media/"+light.file} alt={light.title}/><div><small>{labelFor(light.cat)}</small><h3>{light.title}</h3><div className="price-stack"><span className="discount">₹{light.discountPrice}</span><span className="original">₹{light.originalPrice}</span></div><div className="light-actions"><button className="btn line" onClick={()=>addToCart(light)}>Add to cart</button><button className="btn dark" onClick={()=>buyNow(light)}>Buy now</button></div></div></div>
       <button className="next" onClick={(e)=>{e.stopPropagation();const i=items.findIndex(x=>x.file===light.file);setLight(items[(i+1)%items.length])}}><ChevronRight/></button>
     </div>}
+
+    {isCartOpen && <aside className="cart-panel">
+      <div className="cart-header"><h3>Cart</h3><button className="close-mini" onClick={()=>setIsCartOpen(false)}><X size={18}/></button></div>
+      {cart.length===0 ? <div className="cart-empty">Your cart is empty.</div> : <div className="cart-list">{cart.map(item => <div className="cart-item" key={item.file}>
+        <img src={"/media/"+item.file} alt={item.title} />
+        <div className="cart-meta"><b>{item.title}</b><span>{labelFor(item.cat)}</span><strong>₹{item.discountPrice}</strong></div>
+        <button className="remove-item" onClick={()=>removeFromCart(item.file)}>Remove</button>
+      </div>)}</div>}
+      <div className="cart-footer">
+        <div className="total-row"><span>Total</span><strong>₹{subtotal}</strong></div>
+        <button className="btn dark full" onClick={checkoutCart} disabled={cart.length===0}>Checkout on WhatsApp</button>
+      </div>
+    </aside>}
   </div>
 }
 

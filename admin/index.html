@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DS Lumora Admin</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div id="authScreen" class="auth-screen">
+      <div class="auth-box">
+        <h1>DS Lumora Admin</h1>
+        <p>Login to manage products and gallery content.</p>
+        <form id="loginForm">
+          <label>
+            Email
+            <input type="email" id="adminEmail" value="admin@dslumora.com" required />
+          </label>
+          <label>
+            Password
+            <input type="password" id="adminPassword" value="lumora123" required />
+          </label>
+          <button type="submit">Login</button>
+        </form>
+        <p id="loginError" class="error"></p>
+      </div>
+    </div>
+
+    <div id="adminShell" class="admin-shell hidden">
+      <aside class="sidebar">
+        <h1>DS Lumora</h1>
+        <nav>
+          <button class="nav-btn active" data-section="products">Products</button>
+          <button class="nav-btn" data-section="content">Content</button>
+        </nav>
+        <button id="logoutBtn" class="logout-btn">Logout</button>
+      </aside>
+
+      <main class="content-panel">
+        <section id="products" class="panel active">
+          <div class="topbar">
+            <h2>Product Manager</h2>
+            <button id="newProductBtn">+ New Product</button>
+          </div>
+
+          <form id="productForm" class="product-form">
+            <input type="hidden" id="productId" />
+
+            <div class="grid two-col">
+              <label>
+                Product Name
+                <input type="text" id="name" required />
+              </label>
+              <label>
+                Category
+                <input type="text" id="category" required />
+              </label>
+            </div>
+
+            <label>
+              Description
+              <textarea id="description" rows="4"></textarea>
+            </label>
+
+            <div class="grid two-col">
+              <label>
+                Original Price
+                <input type="number" id="originalPrice" min="0" />
+              </label>
+              <label>
+                Discount Price
+                <input type="number" id="discountPrice" min="0" />
+              </label>
+            </div>
+
+            <div class="grid two-col">
+              <label>
+                Main Image
+                <input type="file" id="imageUpload" accept="image/*" />
+              </label>
+              <label>
+                Product Video
+                <input type="file" id="videoUpload" accept="video/*" />
+              </label>
+            </div>
+
+            <div class="uploaded-list">
+              <h3>Uploaded Images</h3>
+              <div id="imagePreviewList" class="preview-list"></div>
+            </div>
+
+            <div class="checkbox-row">
+              <label><input type="checkbox" id="featured" /> Featured</label>
+              <label><input type="checkbox" id="active" checked /> Active</label>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit">Save Product</button>
+              <button type="button" id="resetFormBtn" class="secondary">Reset</button>
+            </div>
+          </form>
+
+          <div class="list-header">
+            <h3>Products</h3>
+          </div>
+          <div id="productList" class="product-list"></div>
+        </section>
+
+        <section id="content" class="panel">
+          <div class="topbar">
+            <h2>Site Content</h2>
+          </div>
+
+          <form id="siteForm" class="site-form">
+            <div class="grid two-col">
+              <label>
+                Brand Name
+                <input type="text" id="brandName" />
+              </label>
+              <label>
+                Tagline
+                <input type="text" id="tagline" />
+              </label>
+            </div>
+
+            <div class="grid two-col">
+              <label>
+                Instagram URL
+                <input type="text" id="instagram" />
+              </label>
+              <label>
+                WhatsApp Number
+                <input type="text" id="whatsapp" />
+              </label>
+            </div>
+
+            <label>
+              Hero Title
+              <input type="text" id="heroTitle" />
+            </label>
+
+            <label>
+              Hero Subtitle
+              <textarea id="heroSubtitle" rows="3"></textarea>
+            </label>
+
+            <label>
+              Story Title
+              <input type="text" id="storyTitle" />
+            </label>
+
+            <label>
+              Story Text
+              <textarea id="storyText" rows="4"></textarea>
+            </label>
+
+            <button type="submit">Save Content</button>
+          </form>
+        </section>
+      </main>
+    </div>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
