@@ -7,6 +7,7 @@ import {
 import "./styles.css";
 
 const IG = "https://www.instagram.com/ds_lumora/";
+const WA = "https://wa.me/919569533928?text=Hi%20DS%20Lumora%2C%20I%20want%20to%20order%20a%20gift.";
 const media = ["IMG-20260903-WA0063.jpg", "IMG-20260905-WA0049.jpg", "IMG-20260922-WA0022.jpg", "IMG-20260922-WA0023.jpg", "IMG-20260922-WA0029.jpg", "IMG-20260922-WA0034.jpg", "IMG-20260922-WA0035.jpg", "IMG-20260922-WA0036.jpg", "IMG-20260922-WA0037.jpg", "IMG-20260922-WA0043.jpg", "IMG-20260922-WA0045.jpg", "IMG-20260922-WA0047.jpg", "IMG-20260922-WA0053.jpg", "IMG-20260922-WA0060.jpg", "IMG-20260922-WA0063.jpg", "IMG-20260922-WA0070.jpg", "IMG-20260922-WA0088.jpg", "IMG-20260922-WA0099.jpg", "IMG-20260922-WA0106.jpg", "IMG-20260922-WA0108.jpg", "IMG-20260922-WA0111.jpg", "IMG-20260922-WA0119.jpg", "IMG-20260922-WA0120.jpg", "IMG-20260922-WA0131.jpg", "IMG-20260922-WA0134.jpg", "IMG-20260922-WA0137.jpg", "IMG-20260922-WA0142.jpg"];
 
 const categories = [
@@ -75,7 +76,7 @@ function App(){
     return {file,title,cat,index:i};
   }).filter(x=>filter==="all"||x.cat===filter),[filter]);
 
-  const openOrder=()=>window.open(IG,"_blank","noopener,noreferrer");
+  const openOrder=()=>window.open(WA,"_blank","noopener,noreferrer");
   const scroll=(id)=>{document.getElementById(id)?.scrollIntoView({behavior:"smooth"});setMenu(false)};
 
   return <div className="app">
@@ -89,6 +90,7 @@ function App(){
         <button onClick={()=>scroll("gallery")}>The Little Things</button>
         <button onClick={()=>scroll("how")}>How It Works</button>
         <a href={IG} target="_blank" rel="noreferrer"><Instagram size={16}/> Instagram</a>
+        <a href={WA} target="_blank" rel="noreferrer"><MessageCircle size={16}/> WhatsApp</a>
       </nav>
       <button className="hamb" onClick={()=>setMenu(!menu)}>{menu?<X/>:<Menu/>}</button>
     </header>
@@ -103,6 +105,7 @@ function App(){
           <div className="actions">
             <button className="btn dark" onClick={()=>scroll("gallery")}>Explore the little things <ArrowDownRight size={17}/></button>
             <a className="btn line" href={IG} target="_blank" rel="noreferrer"><Instagram size={17}/> @ds_lumora</a>
+            <a className="btn line" href={WA} target="_blank" rel="noreferrer"><MessageCircle size={17}/> WhatsApp</a>
           </div>
           <div className="location"><MapPin size={14}/> Made in Gorakhpur <span>•</span> Custom orders welcome</div>
         </div>
@@ -151,7 +154,7 @@ function App(){
           <h2>Because the best gifts<br/>feel <i>personal.</i></h2>
           <p>At DS Lumora, we turn little ideas into little moments they'll want to keep. From a bunch of flowers to a tiny handmade charm, every piece is made with patience, detail and a whole lot of heart.</p>
           <p className="quote">“Not just something you give.<br/><b>Something they remember.</b>”</p>
-          <button className="text-btn" onClick={()=>scroll("how")}>How we make it <ArrowUpRight size={17}/></button>
+              <button className="text-btn" onClick={()=>scroll("how")}>How we make it <ArrowUpRight size={17}/></button>
         </div>
       </section>
 
@@ -191,9 +194,16 @@ function App(){
       </section>
     </main>
 
-    <footer><div className="footer-brand"><img className="brand-logo-img" src="/media/lumora-logo.jpg" alt="DS Lumora"/><div><b>LUMORA</b><small>HANDMADE WITH LOVE</small></div></div><p>Gorakhpur · Handmade gifting studio</p><a href={IG} target="_blank" rel="noreferrer"><Instagram size={18}/></a></footer>
+    <footer>
+      <div className="footer-brand"><img className="brand-logo-img" src="/media/lumora-logo.jpg" alt="DS Lumora"/><div><b>LUMORA</b><small>HANDMADE WITH LOVE</small></div></div>
+      <p>Gorakhpur · Handmade gifting studio</p>
+      <div className="footer-links">
+        <a href={IG} target="_blank" rel="noreferrer"><Instagram size={18}/></a>
+        <a href={WA} target="_blank" rel="noreferrer"><MessageCircle size={18}/></a>
+      </div>
+    </footer>
 
-    <a className="float-order" href={IG} target="_blank" rel="noreferrer"><MessageCircle size={18}/><span>DM to order</span></a>
+    <a className="float-order" href={WA} target="_blank" rel="noreferrer"><MessageCircle size={18}/><span>Chat on WhatsApp</span></a>
 
     {light && <div className="lightbox" onClick={()=>setLight(null)}>
       <button className="close" onClick={()=>setLight(null)}><X/></button>
